@@ -390,7 +390,7 @@ public class OpusPacketInfo {
             sizes[sizes_ptr + count - 1] = (short) last_size;
         }
 
-        payload_offset.Val = (int) (data_ptr - data0);
+        payload_offset.Val = data_ptr - data0;
 
         for (i = 0; i < count; i++) {
             if (frames != null) {
@@ -402,7 +402,7 @@ public class OpusPacketInfo {
             data_ptr += sizes[sizes_ptr + i];
         }
 
-        packet_offset.Val = pad + (int) (data_ptr - data0);
+        packet_offset.Val = pad + data_ptr - data0;
 
         out_toc.Val = toc;
 

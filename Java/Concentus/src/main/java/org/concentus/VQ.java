@@ -76,7 +76,7 @@ class VQ {
 
         factor = SPREAD_FACTOR[spread - 1];
 
-        gain = (Inlines.celt_div((int) Inlines.MULT16_16(CeltConstants.Q15_ONE, len), (int) (len + factor * K)));
+        gain = (Inlines.celt_div(Inlines.MULT16_16(CeltConstants.Q15_ONE, len), len + factor * K));
         theta = Inlines.HALF16(Inlines.MULT16_16_Q15(gain, gain));
 
         c = Inlines.celt_cos_norm(Inlines.EXTEND32(theta));
@@ -208,13 +208,13 @@ class VQ {
  /* Prevents infinities and NaNs from causing too many pulses
                to be allocated. 64 is an approximation of infinity here. */
             if (sum <= K) {
-                X[X_ptr] = ((short) (0.5 + (1.0f) * (((int) 1) << (14))))/*Inlines.QCONST16(1.0f, 14)*/;
+                X[X_ptr] = ((short) (0.5 + (1.0f) * ((1) << (14))))/*Inlines.QCONST16(1.0f, 14)*/;
                 j = X_ptr + 1;
                 do {
                     X[j] = 0;
                 } while (++j < N + X_ptr);
 
-                sum = ((short) (0.5 + (1.0f) * (((int) 1) << (14))))/*Inlines.QCONST16(1.0f, 14)*/;
+                sum = ((short) (0.5 + (1.0f) * ((1) << (14))))/*Inlines.QCONST16(1.0f, 14)*/;
             }
 
             rcp = Inlines.EXTRACT16(Inlines.MULT16_32_Q16((K - 1), Inlines.celt_rcp(sum)));
@@ -223,7 +223,7 @@ class VQ {
             do {
                 /* It's really important to round *towards zero* here */
                 iy[j] = Inlines.MULT16_16_Q15(X[X_ptr + j], rcp);
-                y[j] = (int) iy[j];
+                y[j] = iy[j];
                 yy = (Inlines.MAC16_16(yy, y[j], y[j]));
                 xy = Inlines.MAC16_16(xy, X[X_ptr + j], y[j]);
                 y[j] *= 2;
@@ -236,7 +236,7 @@ class VQ {
         /* This should never happen, but just in case it does (e.g. on silence)
            we fill the first bin with pulses. */
         if (pulsesLeft > N + 3) {
-            int tmp = (int) pulsesLeft;
+            int tmp = pulsesLeft;
             yy = (Inlines.MAC16_16(yy, tmp, tmp));
             yy = (Inlines.MAC16_16(yy, tmp, y[0]));
             iy[0] += pulsesLeft;
@@ -362,7 +362,7 @@ class VQ {
         mid = (Inlines.celt_sqrt(Emid));
         side = (Inlines.celt_sqrt(Eside));
         /* 0.63662 = 2/pi */
-        itheta = Inlines.MULT16_16_Q15(((short) (0.5 + (0.63662f) * (((int) 1) << (15))))/*Inlines.QCONST16(0.63662f, 15)*/, Inlines.celt_atan2p(side, mid));
+        itheta = Inlines.MULT16_16_Q15(((short) (0.5 + (0.63662f) * ((1) << (15))))/*Inlines.QCONST16(0.63662f, 15)*/, Inlines.celt_atan2p(side, mid));
 
         return itheta;
     }

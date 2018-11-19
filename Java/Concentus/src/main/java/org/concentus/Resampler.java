@@ -250,7 +250,7 @@ class Resampler {
         /* Internal variables and state are in Q10 format */
         for (k = 0; k < len2; k++) {
             /* Convert to Q10 */
-            in32 = Inlines.silk_LSHIFT((int) input[2 * k], 10);
+            in32 = Inlines.silk_LSHIFT(input[2 * k], 10);
 
             /* All-pass section for even input sample */
             Y = Inlines.silk_SUB32(in32, S[0]);
@@ -259,7 +259,7 @@ class Resampler {
             S[0] = Inlines.silk_ADD32(in32, X);
 
             /* Convert to Q10 */
-            in32 = Inlines.silk_LSHIFT((int) input[2 * k + 1], 10);
+            in32 = Inlines.silk_LSHIFT(input[2 * k + 1], 10);
 
             /* All-pass section for odd input sample, and add to output of previous section */
             Y = Inlines.silk_SUB32(in32, S[1]);
@@ -362,7 +362,7 @@ class Resampler {
         int k, out32;
 
         for (k = 0; k < len; k++) {
-            out32 = Inlines.silk_ADD_LSHIFT32(S[S_ptr], (int) input[input_ptr + k], 8);
+            out32 = Inlines.silk_ADD_LSHIFT32(S[S_ptr], input[input_ptr + k], 8);
             out_Q8[out_Q8_ptr + k] = out32;
             out32 = Inlines.silk_LSHIFT(out32, 2);
             S[S_ptr] = Inlines.silk_SMLAWB(S[S_ptr + 1], out32, A_Q14[0]);
@@ -635,7 +635,7 @@ class Resampler {
         /* Internal variables and state are in Q10 format */
         for (k = 0; k < len; k++) {
             /* Convert to Q10 */
-            in32 = Inlines.silk_LSHIFT((int) input[input_ptr + k], 10);
+            in32 = Inlines.silk_LSHIFT(input[input_ptr + k], 10);
 
             /* First all-pass section for even output sample */
             Y = Inlines.silk_SUB32(in32, S[0]);

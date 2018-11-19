@@ -140,7 +140,7 @@ class LinearAlgebra {
                 /* Q36 */
                 one_div_diag_Q40 = Inlines.silk_LSHIFT(one_div_diag_Q36, 4);
                 /* Q40 */
-                err = Inlines.silk_SUB32((int) 1 << 24, Inlines.silk_SMULWW(tmp_32, one_div_diag_Q40));
+                err = Inlines.silk_SUB32(1 << 24, Inlines.silk_SMULWW(tmp_32, one_div_diag_Q40));
                 /* Q24 */
                 one_div_diag_Q48 = Inlines.silk_SMULWW(err, one_div_diag_Q40);
                 /* Q48 */

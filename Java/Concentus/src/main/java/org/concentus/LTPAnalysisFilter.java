@@ -77,7 +77,7 @@ class LTPAnalysisFilter {
                 /* round and . Q0*/
 
  /* Subtract long-term prediction */
-                LTP_res[LTP_res_ptri] = (short) Inlines.silk_SAT16((int) x[x_ptr2 + i] - LTP_est);
+                LTP_res[LTP_res_ptri] = (short) Inlines.silk_SAT16(x[x_ptr2 + i] - LTP_est);
 
                 /* Scale residual */
                 LTP_res[LTP_res_ptri] = (short) (Inlines.silk_SMULWB(invGains_Q16[k], LTP_res[LTP_res_ptri]));

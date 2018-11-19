@@ -65,7 +65,7 @@ class Laplace {
             for (i = 1; fs > 0 && i < val; i++) {
                 fs *= 2;
                 fl = Inlines.CapToUInt32(fl + fs + 2 * LAPLACE_MINP);
-                fs = Inlines.CapToUInt32((fs * (int) decay) >> 15);
+                fs = Inlines.CapToUInt32((fs * decay) >> 15);
             }
 
             /* Everything beyond that has probability LAPLACE_MINP. */
@@ -104,7 +104,7 @@ class Laplace {
             while (fs > LAPLACE_MINP && fm >= fl + 2 * fs) {
                 fs *= 2;
                 fl = Inlines.CapToUInt32(fl + fs);
-                fs = Inlines.CapToUInt32(((fs - 2 * LAPLACE_MINP) * (int) decay) >> 15);
+                fs = Inlines.CapToUInt32(((fs - 2 * LAPLACE_MINP) * decay) >> 15);
                 fs += LAPLACE_MINP;
                 val++;
             }

@@ -673,7 +673,7 @@ class SilkChannelEncoder {
                     /* Previous packet did not have LBRR, and was therefore coded at a higher bitrate */
                     this.LBRR_GainIncreases = 7;
                 } else {
-                    this.LBRR_GainIncreases = Inlines.silk_max_int(7 - Inlines.silk_SMULWB((int) this.PacketLoss_perc, ((int) ((0.4f) * ((long) 1 << (16)) + 0.5))/*Inlines.SILK_CONST(0.4f, 16)*/), 2);
+                    this.LBRR_GainIncreases = Inlines.silk_max_int(7 - Inlines.silk_SMULWB(this.PacketLoss_perc, ((int) ((0.4f) * ((long) 1 << (16)) + 0.5))/*Inlines.SILK_CONST(0.4f, 16)*/), 2);
                 }
                 this.LBRR_enabled = 1;
             }
@@ -1075,7 +1075,7 @@ class SilkChannelEncoder {
                         /* Restore output state from earlier iteration that did meet the bitrate budget */
                         psRangeEnc.Assign(sRangeEnc_copy2);
                         Inlines.OpusAssert(sRangeEnc_copy2.offs <= 1275);
-                        psRangeEnc.write_buffer(ec_buf_copy, 0, 0, (int) sRangeEnc_copy2.offs);
+                        psRangeEnc.write_buffer(ec_buf_copy, 0, 0, sRangeEnc_copy2.offs);
                         this.sNSQ.Assign(sNSQ_copy2);
                         this.sShape.LastGainIndex = LastGainIndex_copy2;
                     }
@@ -1103,7 +1103,7 @@ class SilkChannelEncoder {
                         /* Copy part of the output state */
                         sRangeEnc_copy2.Assign(psRangeEnc);
                         Inlines.OpusAssert(psRangeEnc.offs <= 1275);
-                        System.arraycopy(psRangeEnc.get_buffer(), 0, ec_buf_copy, 0, (int) psRangeEnc.offs);
+                        System.arraycopy(psRangeEnc.get_buffer(), 0, ec_buf_copy, 0, psRangeEnc.offs);
                         sNSQ_copy2.Assign(this.sNSQ);
                         LastGainIndex_copy2 = this.sShape.LastGainIndex;
                     }
@@ -1121,7 +1121,7 @@ class SilkChannelEncoder {
                         gain_factor_Q16 = Inlines.silk_max_32(gain_factor_Q16, ((int) ((1.3f) * ((long) 1 << (16)) + 0.5))/*Inlines.SILK_CONST(1.3f, 16)*/);
                     }
 
-                    gainMult_Q8 = (short) (Inlines.silk_SMULWB(gain_factor_Q16, (int) gainMult_Q8));
+                    gainMult_Q8 = (short) (Inlines.silk_SMULWB(gain_factor_Q16, gainMult_Q8));
                 } else {
                     /* Adjust gain by interpolating */
                     gainMult_Q8 = (short) (gainMult_lower + Inlines.silk_DIV32_16(Inlines.silk_MUL(gainMult_upper - gainMult_lower, maxBits - nBits_lower), nBits_upper - nBits_lower));

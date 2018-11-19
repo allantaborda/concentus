@@ -135,14 +135,14 @@ public class CodecHelpers {
             w = Inlines.MULT16_16_Q15(window[i * inc], window[i * inc]);
             g = Inlines.SHR32(Inlines.MAC16_16(Inlines.MULT16_16(w, g2),
                     CeltConstants.Q15ONE - w, g1), 15);
-            diff = Inlines.EXTRACT16(Inlines.HALF32((int) pcm_buf[i * channels] - (int) pcm_buf[i * channels + 1]));
+            diff = Inlines.EXTRACT16(Inlines.HALF32(pcm_buf[i * channels] - pcm_buf[i * channels + 1]));
             diff = Inlines.MULT16_16_Q15(g, diff);
             pcm_buf[i * channels] = (short) (pcm_buf[i * channels] - diff);
             pcm_buf[i * channels + 1] = (short) (pcm_buf[i * channels + 1] + diff);
         }
         for (; i < frame_size; i++) {
             int diff;
-            diff = Inlines.EXTRACT16(Inlines.HALF32((int) pcm_buf[i * channels] - (int) pcm_buf[i * channels + 1]));
+            diff = Inlines.EXTRACT16(Inlines.HALF32(pcm_buf[i * channels] - pcm_buf[i * channels + 1]));
             diff = Inlines.MULT16_16_Q15(g2, diff);
             pcm_buf[i * channels] = (short) (pcm_buf[i * channels] - diff);
             pcm_buf[i * channels + 1] = (short) (pcm_buf[i * channels + 1] + diff);
@@ -280,7 +280,7 @@ public class CodecHelpers {
                 cost[i][1 << j] = min_cost;
                 /* If part of the frame is outside the analysis window, only count part of the cost */
                 if (N - i < (1 << j)) {
-                    cost[i][1 << j] += curr_cost * (float) (N - i) / (1 << j);
+                    cost[i][1 << j] += curr_cost * (N - i) / (1 << j);
                 } else {
                     cost[i][1 << j] += curr_cost;
                 }
@@ -475,7 +475,7 @@ public class CodecHelpers {
         mem.XX = Inlines.MAX32(0, mem.XX);
         mem.XY = Inlines.MAX32(0, mem.XY);
         mem.YY = Inlines.MAX32(0, mem.YY);
-        if (Inlines.MAX32(mem.XX, mem.YY) > ((short) (0.5 + (8e-4f) * (((int) 1) << (18))))/*Inlines.QCONST16(8e-4f, 18)*/) {
+        if (Inlines.MAX32(mem.XX, mem.YY) > ((short) (0.5 + (8e-4f) * ((1) << (18))))/*Inlines.QCONST16(8e-4f, 18)*/) {
             sqrt_xx = Inlines.celt_sqrt(mem.XX);
             sqrt_yy = Inlines.celt_sqrt(mem.YY);
             qrrt_xx = Inlines.celt_sqrt(sqrt_xx);
@@ -485,11 +485,11 @@ public class CodecHelpers {
             corr = Inlines.SHR32(Inlines.frac_div32(mem.XY, CeltConstants.EPSILON + Inlines.MULT16_16(sqrt_xx, sqrt_yy)), 16);
             /* Approximate loudness difference */
             ldiff = CeltConstants.Q15ONE * Inlines.ABS16(qrrt_xx - qrrt_yy) / (CeltConstants.EPSILON + qrrt_xx + qrrt_yy);
-            width = Inlines.MULT16_16_Q15(Inlines.celt_sqrt(((int) (0.5 + (1.0f) * (((int) 1) << (30))))/*Inlines.QCONST32(1.0f, 30)*/ - Inlines.MULT16_16(corr, corr)), ldiff);
+            width = Inlines.MULT16_16_Q15(Inlines.celt_sqrt(((int) (0.5 + (1.0f) * ((1) << (30))))/*Inlines.QCONST32(1.0f, 30)*/ - Inlines.MULT16_16(corr, corr)), ldiff);
             /* Smoothing over one second */
             mem.smoothed_width += (width - mem.smoothed_width) / frame_rate;
             /* Peak follower */
-            mem.max_follower = Inlines.MAX16(mem.max_follower - ((short) (0.5 + (.02f) * (((int) 1) << (15))))/*Inlines.QCONST16(.02f, 15)*/ / frame_rate, mem.smoothed_width);
+            mem.max_follower = Inlines.MAX16(mem.max_follower - ((short) (0.5 + (.02f) * ((1) << (15))))/*Inlines.QCONST16(.02f, 15)*/ / frame_rate, mem.smoothed_width);
         } else {
             width = 0;
             corr = CeltConstants.Q15ONE;

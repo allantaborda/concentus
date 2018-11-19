@@ -63,7 +63,7 @@ class CNG {
         seed = rand_seed.Val;
         for (i = exc_Q10_ptr; i < exc_Q10_ptr + length; i++) {
             seed = Inlines.silk_RAND(seed);
-            idx = (int) (Inlines.silk_RSHIFT(seed, 24) & exc_mask);
+            idx = Inlines.silk_RSHIFT(seed, 24) & exc_mask;
             Inlines.OpusAssert(idx >= 0);
             Inlines.OpusAssert(idx <= SilkConstants.CNG_BUF_MASK_MAX);
             exc_Q10[i] = (short) Inlines.silk_SAT16(Inlines.silk_SMULWW(exc_buf_Q14[idx], Gain_Q16 >> 4));
@@ -119,7 +119,7 @@ class CNG {
 
  /* Smoothing of LSF's  */
             for (i = 0; i < psDec.LPC_order; i++) {
-                psCNG.CNG_smth_NLSF_Q15[i] += (short) (Inlines.silk_SMULWB((int) psDec.prevNLSF_Q15[i] - (int) psCNG.CNG_smth_NLSF_Q15[i], SilkConstants.CNG_NLSF_SMTH_Q16));
+                psCNG.CNG_smth_NLSF_Q15[i] += (short) (Inlines.silk_SMULWB(psDec.prevNLSF_Q15[i] - psCNG.CNG_smth_NLSF_Q15[i], SilkConstants.CNG_NLSF_SMTH_Q16));
             }
 
             /* Find the subframe with the highest gain */

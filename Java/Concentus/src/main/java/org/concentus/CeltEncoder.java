@@ -177,11 +177,11 @@ class CeltEncoder {
         this.oldLogE2 = Arrays.InitTwoDimensionalArrayInt(this.channels, this.mode.nbEBands);
 
         for (i = 0; i < this.mode.nbEBands; i++) {
-            this.oldLogE[0][i] = this.oldLogE2[0][i] = -((short) (0.5 + (28.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
+            this.oldLogE[0][i] = this.oldLogE2[0][i] = -((short) (0.5 + (28.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
         }
         if (this.channels == 2) {
             for (i = 0; i < this.mode.nbEBands; i++) {
-                this.oldLogE[1][i] = this.oldLogE2[1][i] = -((short) (0.5 + (28.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
+                this.oldLogE[1][i] = this.oldLogE2[1][i] = -((short) (0.5 + (28.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
             }
         }
         this.vbr_offset = 0;
@@ -279,7 +279,7 @@ class CeltEncoder {
             if (pitch_index.Val > CeltConstants.COMBFILTER_MAXPERIOD - 2) {
                 pitch_index.Val = CeltConstants.COMBFILTER_MAXPERIOD - 2;
             }
-            gain1 = Inlines.MULT16_16_Q15(((short) (0.5 + (.7f) * (((int) 1) << (15))))/*Inlines.QCONST16(.7f, 15)*/, gain1);
+            gain1 = Inlines.MULT16_16_Q15(((short) (0.5 + (.7f) * ((1) << (15))))/*Inlines.QCONST16(.7f, 15)*/, gain1);
             /*printf("%d %d %f %f\n", pitch_change, pitch_index, gain1, st.analysis.tonality);*/
             if (this.loss_rate > 2) {
                 gain1 = Inlines.HALF32(gain1);
@@ -296,27 +296,27 @@ class CeltEncoder {
         }
 
         /* Gain threshold for enabling the prefilter/postfilter */
-        pf_threshold = ((short) (0.5 + (.2f) * (((int) 1) << (15))))/*Inlines.QCONST16(.2f, 15)*/;
+        pf_threshold = ((short) (0.5 + (.2f) * ((1) << (15))))/*Inlines.QCONST16(.2f, 15)*/;
 
         /* Adjusting the threshold based on rate and continuity */
         if (Inlines.abs(pitch_index.Val - this.prefilter_period) * 10 > pitch_index.Val) {
-            pf_threshold += ((short) (0.5 + (.2f) * (((int) 1) << (15))))/*Inlines.QCONST16(.2f, 15)*/;
+            pf_threshold += ((short) (0.5 + (.2f) * ((1) << (15))))/*Inlines.QCONST16(.2f, 15)*/;
         }
         if (nbAvailableBytes < 25) {
-            pf_threshold += ((short) (0.5 + (.1f) * (((int) 1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
+            pf_threshold += ((short) (0.5 + (.1f) * ((1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
         }
         if (nbAvailableBytes < 35) {
-            pf_threshold += ((short) (0.5 + (.1f) * (((int) 1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
+            pf_threshold += ((short) (0.5 + (.1f) * ((1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
         }
-        if (this.prefilter_gain > ((short) (0.5 + (.4f) * (((int) 1) << (15))))/*Inlines.QCONST16(.4f, 15)*/) {
-            pf_threshold -= ((short) (0.5 + (.1f) * (((int) 1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
+        if (this.prefilter_gain > ((short) (0.5 + (.4f) * ((1) << (15))))/*Inlines.QCONST16(.4f, 15)*/) {
+            pf_threshold -= ((short) (0.5 + (.1f) * ((1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
         }
-        if (this.prefilter_gain > ((short) (0.5 + (.55f) * (((int) 1) << (15))))/*Inlines.QCONST16(.55f, 15)*/) {
-            pf_threshold -= ((short) (0.5 + (.1f) * (((int) 1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
+        if (this.prefilter_gain > ((short) (0.5 + (.55f) * ((1) << (15))))/*Inlines.QCONST16(.55f, 15)*/) {
+            pf_threshold -= ((short) (0.5 + (.1f) * ((1) << (15))))/*Inlines.QCONST16(.1f, 15)*/;
         }
 
         /* Hard threshold at 0.2 */
-        pf_threshold = Inlines.MAX16(pf_threshold, ((short) (0.5 + (.2f) * (((int) 1) << (15))))/*Inlines.QCONST16(.2f, 15)*/);
+        pf_threshold = Inlines.MAX16(pf_threshold, ((short) (0.5 + (.2f) * ((1) << (15))))/*Inlines.QCONST16(.2f, 15)*/);
 
         if (gain1 < pf_threshold) {
             gain1 = 0;
@@ -325,13 +325,13 @@ class CeltEncoder {
         } else {
             /*This block is not gated by a total bits check only because
               of the nbAvailableBytes check above.*/
-            if (Inlines.ABS32(gain1 - this.prefilter_gain) < ((short) (0.5 + (.1f) * (((int) 1) << (15))))/*Inlines.QCONST16(.1f, 15)*/) {
+            if (Inlines.ABS32(gain1 - this.prefilter_gain) < ((short) (0.5 + (.1f) * ((1) << (15))))/*Inlines.QCONST16(.1f, 15)*/) {
                 gain1 = this.prefilter_gain;
             }
 
             qg = ((gain1 + 1536) >> 10) / 3 - 1;
             qg = Inlines.IMAX(0, Inlines.IMIN(7, qg));
-            gain1 = ((short) (0.5 + (0.09375f) * (((int) 1) << (15))))/*Inlines.QCONST16(0.09375f, 15)*/ * (qg + 1);
+            gain1 = ((short) (0.5 + (0.09375f) * ((1) << (15))))/*Inlines.QCONST16(0.09375f, 15)*/ * (qg + 1);
             pf_on = 1;
         }
         /*printf("%d %f\n", pitch_index, gain1);*/
@@ -573,7 +573,7 @@ class CeltEncoder {
             gain1 = boxed_gain1.Val;
             qg = boxed_qg.Val;
 
-            if ((gain1 > ((short) (0.5 + (.4f) * (((int) 1) << (15))))/*Inlines.QCONST16(.4f, 15)*/ || this.prefilter_gain > ((short) (0.5 + (.4f) * (((int) 1) << (15))))/*Inlines.QCONST16(.4f, 15)*/) && (this.analysis.valid == 0 || this.analysis.tonality > .3)
+            if ((gain1 > ((short) (0.5 + (.4f) * ((1) << (15))))/*Inlines.QCONST16(.4f, 15)*/ || this.prefilter_gain > ((short) (0.5 + (.4f) * ((1) << (15))))/*Inlines.QCONST16(.4f, 15)*/) && (this.analysis.valid == 0 || this.analysis.tonality > .3)
                     && (pitch_index > 1.26 * this.prefilter_period || pitch_index < .79 * this.prefilter_period)) {
                 pitch_change = 1;
             }
@@ -648,7 +648,7 @@ class CeltEncoder {
 
         if (this.lfe != 0) {
             for (i = 2; i < end; i++) {
-                bandE[0][i] = Inlines.IMIN(bandE[0][i], Inlines.MULT16_32_Q15(((short) (0.5 + (1e-4f) * (((int) 1) << (15))))/*Inlines.QCONST16(1e-4f, 15)*/, bandE[0][0]));
+                bandE[0][i] = Inlines.IMIN(bandE[0][i], Inlines.MULT16_32_Q15(((short) (0.5 + (1e-4f) * ((1) << (15))))/*Inlines.QCONST16(1e-4f, 15)*/, bandE[0][0]));
                 bandE[0][i] = Inlines.MAX32(bandE[0][i], CeltConstants.EPSILON);
             }
         }
@@ -670,7 +670,7 @@ class CeltEncoder {
                 for (i = 0; i < mask_end; i++) {
                     int mask;
                     mask = Inlines.MAX16(Inlines.MIN16(this.energy_mask[nbEBands * c + i],
-                            ((short) (0.5 + (.25f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/), -((short) (0.5 + (2.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(2.0f, CeltConstants.DB_SHIFT)*/);
+                            ((short) (0.5 + (.25f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/), -((short) (0.5 + (2.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(2.0f, CeltConstants.DB_SHIFT)*/);
                     if (mask > 0) {
                         mask = Inlines.HALF16(mask);
                     }
@@ -681,11 +681,11 @@ class CeltEncoder {
             }
             Inlines.OpusAssert(count > 0);
             mask_avg = Inlines.DIV32_16(mask_avg, count);
-            mask_avg += ((short) (0.5 + (.2f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.2f, CeltConstants.DB_SHIFT)*/;
+            mask_avg += ((short) (0.5 + (.2f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.2f, CeltConstants.DB_SHIFT)*/;
             diff = diff * 6 / (C * (mask_end - 1) * (mask_end + 1) * mask_end);
             /* Again, being conservative */
             diff = Inlines.HALF32(diff);
-            diff = Inlines.MAX32(Inlines.MIN32(diff, ((int) (0.5 + (.031f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST32(.031f, CeltConstants.DB_SHIFT)*/), 0 - ((int) (0.5 + (.031f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST32(.031f, CeltConstants.DB_SHIFT)*/);
+            diff = Inlines.MAX32(Inlines.MIN32(diff, ((int) (0.5 + (.031f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST32(.031f, CeltConstants.DB_SHIFT)*/), 0 - ((int) (0.5 + (.031f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST32(.031f, CeltConstants.DB_SHIFT)*/);
             /* Find the band that's in the middle of the coded spectrum */
             for (midband = 0; eBands[midband + 1] < eBands[mask_end] / 2; midband++) ;
             count_dynalloc = 0;
@@ -698,17 +698,17 @@ class CeltEncoder {
                 } else {
                     unmask = this.energy_mask[i];
                 }
-                unmask = Inlines.MIN16(unmask, ((short) (0.5 + (.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.0f, CeltConstants.DB_SHIFT)*/);
+                unmask = Inlines.MIN16(unmask, ((short) (0.5 + (.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.0f, CeltConstants.DB_SHIFT)*/);
                 unmask -= lin;
-                if (unmask > ((short) (0.5 + (.25f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/) {
-                    surround_dynalloc[i] = unmask - ((short) (0.5 + (.25f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/;
+                if (unmask > ((short) (0.5 + (.25f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/) {
+                    surround_dynalloc[i] = unmask - ((short) (0.5 + (.25f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/;
                     count_dynalloc++;
                 }
             }
             if (count_dynalloc >= 3) {
                 /* If we need dynalloc in many bands, it's probably because our
                    initial masking rate was too low. */
-                mask_avg += ((short) (0.5 + (.25f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/;
+                mask_avg += ((short) (0.5 + (.25f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/;
                 if (mask_avg > 0) {
                     /* Something went really wrong in the original calculations,
                        disabling masking. */
@@ -717,11 +717,11 @@ class CeltEncoder {
                     Arrays.MemSet(surround_dynalloc, 0, mask_end);
                 } else {
                     for (i = 0; i < mask_end; i++) {
-                        surround_dynalloc[i] = Inlines.MAX16(0, surround_dynalloc[i] - ((short) (0.5 + (.25f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/);
+                        surround_dynalloc[i] = Inlines.MAX16(0, surround_dynalloc[i] - ((short) (0.5 + (.25f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.25f, CeltConstants.DB_SHIFT)*/);
                     }
                 }
             }
-            mask_avg += ((short) (0.5 + (.2f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.2f, CeltConstants.DB_SHIFT)*/;
+            mask_avg += ((short) (0.5 + (.2f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(.2f, CeltConstants.DB_SHIFT)*/;
             /* Convert to 1/64th units used for the trim */
             surround_trim = 64 * diff;
             /*printf("%d %d ", mask_avg, surround_trim);*/
@@ -729,11 +729,11 @@ class CeltEncoder {
         }
         /* Temporal VBR (but not for LFE) */
         if (this.lfe == 0) {
-            int follow = -((short) (0.5 + (10.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(10.0f, CeltConstants.DB_SHIFT)*/;
+            int follow = -((short) (0.5 + (10.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(10.0f, CeltConstants.DB_SHIFT)*/;
             int frame_avg = 0;
             int offset = shortBlocks != 0 ? Inlines.HALF16(Inlines.SHL16(LM, CeltConstants.DB_SHIFT)) : 0;
             for (i = start; i < end; i++) {
-                follow = Inlines.MAX16(follow - ((short) (0.5 + (1.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(1.0f, CeltConstants.DB_SHIFT)*/, bandLogE[0][i] - offset);
+                follow = Inlines.MAX16(follow - ((short) (0.5 + (1.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(1.0f, CeltConstants.DB_SHIFT)*/, bandLogE[0][i] - offset);
                 if (C == 2) {
                     follow = Inlines.MAX16(follow, bandLogE[1][i] - offset);
                 }
@@ -741,8 +741,8 @@ class CeltEncoder {
             }
             frame_avg /= (end - start);
             temporal_vbr = Inlines.SUB16(frame_avg, this.spec_avg);
-            temporal_vbr = Inlines.MIN16(((short) (0.5 + (3.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(3.0f, CeltConstants.DB_SHIFT)*/, Inlines.MAX16(-((short) (0.5 + (1.5f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(1.5f, CeltConstants.DB_SHIFT)*/, temporal_vbr));
-            this.spec_avg += (short) (Inlines.MULT16_16_Q15(((short) (0.5 + (.02f) * (((int) 1) << (15))))/*Inlines.QCONST16(.02f, 15)*/, temporal_vbr));
+            temporal_vbr = Inlines.MIN16(((short) (0.5 + (3.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(3.0f, CeltConstants.DB_SHIFT)*/, Inlines.MAX16(-((short) (0.5 + (1.5f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(1.5f, CeltConstants.DB_SHIFT)*/, temporal_vbr));
+            this.spec_avg += (short) (Inlines.MULT16_16_Q15(((short) (0.5 + (.02f) * ((1) << (15))))/*Inlines.QCONST16(.02f, 15)*/, temporal_vbr));
         }
         /*for (i=0;i<21;i++)
            printf("%f ", bandLogE[i]);
@@ -773,7 +773,7 @@ class CeltEncoder {
                         bandLogE2[1][i] += Inlines.HALF16(Inlines.SHL16(LM, CeltConstants.DB_SHIFT));
                     }
                 }
-                tf_estimate = ((short) (0.5 + (.2f) * (((int) 1) << (14))))/*Inlines.QCONST16(.2f, 14)*/;
+                tf_estimate = ((short) (0.5 + (.2f) * ((1) << (14))))/*Inlines.QCONST16(.2f, 14)*/;
             }
         }
 
@@ -873,7 +873,7 @@ class CeltEncoder {
         dynalloc_logp = 6;
         total_bits <<= EntropyCoder.BITRES;
         total_boost = 0;
-        tell = (int) enc.tell_frac();
+        tell = enc.tell_frac();
         for (i = start; i < end; i++) {
             int width, quanta;
             int dynalloc_loop_logp;
@@ -890,7 +890,7 @@ class CeltEncoder {
                 int flag;
                 flag = j < offsets[i] ? 1 : 0;
                 enc.enc_bit_logp(flag, dynalloc_loop_logp);
-                tell = (int) enc.tell_frac();
+                tell = enc.tell_frac();
                 if (flag == 0) {
                     break;
                 }
@@ -911,7 +911,7 @@ class CeltEncoder {
                 dual_stereo = CeltCommon.stereo_analysis(mode, X, LM);
             }
 
-            this.intensity = Bands.hysteresis_decision((int) (equiv_rate / 1000),
+            this.intensity = Bands.hysteresis_decision(equiv_rate / 1000,
                     CeltTables.intensity_thresholds, CeltTables.intensity_histeresis, 21, this.intensity);
             this.intensity = Inlines.IMIN(end, Inlines.IMAX(start, this.intensity));
         }
@@ -928,7 +928,7 @@ class CeltEncoder {
                 this.stereo_saving = boxed_stereo_saving.Val;
             }
             enc.enc_icdf(alloc_trim, CeltTables.trim_icdf, 7);
-            tell = (int) enc.tell_frac();
+            tell = enc.tell_frac();
         }
 
         /* Variable bitrate */
@@ -988,7 +988,7 @@ class CeltEncoder {
                 this.vbr_count++;
                 alpha = Inlines.celt_rcp(Inlines.SHL32((this.vbr_count + 20), 16));
             } else {
-                alpha = ((short) (0.5 + (.001f) * (((int) 1) << (15))))/*Inlines.QCONST16(.001f, 15)*/;
+                alpha = ((short) (0.5 + (.001f) * ((1) << (15))))/*Inlines.QCONST16(.001f, 15)*/;
             }
             /* How many bits have we used in excess of what we're allowed */
             if (this.constrained_vbr != 0) {
@@ -998,7 +998,7 @@ class CeltEncoder {
 
  /* Compute the offset we need to apply in order to reach the target */
             if (this.constrained_vbr != 0) {
-                this.vbr_drift += (int) Inlines.MULT16_32_Q15(alpha, (delta * (1 << lm_diff)) - this.vbr_offset - this.vbr_drift);
+                this.vbr_drift += Inlines.MULT16_32_Q15(alpha, (delta * (1 << lm_diff)) - this.vbr_offset - this.vbr_drift);
                 this.vbr_offset = -this.vbr_drift;
             }
             /*printf ("%d\n", st.vbr_drift);*/
@@ -1023,20 +1023,20 @@ class CeltEncoder {
         fine_priority = new int[nbEBands];
 
         /* bits =    packet size                                     - where we are                        - safety*/
-        bits = (((int) nbCompressedBytes * 8) << EntropyCoder.BITRES) - (int) enc.tell_frac() - 1;
+        bits = ((nbCompressedBytes * 8) << EntropyCoder.BITRES) - enc.tell_frac() - 1;
         anti_collapse_rsv = isTransient != 0 && LM >= 2 && bits >= ((LM + 2) << EntropyCoder.BITRES) ? (1 << EntropyCoder.BITRES) : 0;
         bits -= anti_collapse_rsv;
         signalBandwidth = end - 1;
 
         if (this.analysis.enabled && this.analysis.valid != 0) {
             int min_bandwidth;
-            if (equiv_rate < (int) 32000 * C) {
+            if (equiv_rate < 32000 * C) {
                 min_bandwidth = 13;
-            } else if (equiv_rate < (int) 48000 * C) {
+            } else if (equiv_rate < 48000 * C) {
                 min_bandwidth = 16;
-            } else if (equiv_rate < (int) 60000 * C) {
+            } else if (equiv_rate < 60000 * C) {
                 min_bandwidth = 18;
-            } else if (equiv_rate < (int) 80000 * C) {
+            } else if (equiv_rate < 80000 * C) {
                 min_bandwidth = 19;
             } else {
                 min_bandwidth = 20;
@@ -1080,15 +1080,15 @@ class CeltEncoder {
             enc.enc_bits(anti_collapse_on, 1);
         }
 
-        QuantizeBands.quant_energy_finalise(mode, start, end, this.oldBandE, error, fine_quant, fine_priority, nbCompressedBytes * 8 - (int) enc.tell(), enc, C);
+        QuantizeBands.quant_energy_finalise(mode, start, end, this.oldBandE, error, fine_quant, fine_priority, nbCompressedBytes * 8 - enc.tell(), enc, C);
 
         if (silence != 0) {
             for (i = 0; i < nbEBands; i++) {
-                this.oldBandE[0][i] = -((short) (0.5 + (28.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
+                this.oldBandE[0][i] = -((short) (0.5 + (28.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
             }
             if (C == 2) {
                 for (i = 0; i < nbEBands; i++) {
-                    this.oldBandE[1][i] = -((short) (0.5 + (28.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
+                    this.oldBandE[1][i] = -((short) (0.5 + (28.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
                 }
             }
         }
@@ -1124,11 +1124,11 @@ class CeltEncoder {
         do {
             for (i = 0; i < start; i++) {
                 oldBandE[c][i] = 0;
-                oldLogE[c][i] = oldLogE2[c][i] = -((short) (0.5 + (28.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
+                oldLogE[c][i] = oldLogE2[c][i] = -((short) (0.5 + (28.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
             }
             for (i = end; i < nbEBands; i++) {
                 oldBandE[c][i] = 0;
-                oldLogE[c][i] = oldLogE2[c][i] = -((short) (0.5 + (28.0f) * (((int) 1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
+                oldLogE[c][i] = oldLogE2[c][i] = -((short) (0.5 + (28.0f) * ((1) << (CeltConstants.DB_SHIFT))))/*Inlines.QCONST16(28.0f, CeltConstants.DB_SHIFT)*/;
             }
         } while (++c < CC);
 

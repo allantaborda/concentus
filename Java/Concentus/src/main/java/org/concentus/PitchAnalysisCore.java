@@ -214,8 +214,8 @@ class PitchAnalysisCore {
         /* Combine two subframes into single correlation measure and apply short-lag bias */
         if (nb_subfr == SilkConstants.PE_MAX_NB_SUBFR) {
             for (i = MAX_LAG_4KHZ; i >= MIN_LAG_4KHZ; i--) {
-                sum = (int) Inlines.MatrixGet(C, 0, i - MIN_LAG_4KHZ, CSTRIDE_4KHZ)
-                        + (int) Inlines.MatrixGet(C, 1, i - MIN_LAG_4KHZ, CSTRIDE_4KHZ);
+                sum = Inlines.MatrixGet(C, 0, i - MIN_LAG_4KHZ, CSTRIDE_4KHZ)
+                        + Inlines.MatrixGet(C, 1, i - MIN_LAG_4KHZ, CSTRIDE_4KHZ);
                 /* Q14 */
                 sum = Inlines.silk_SMLAWB(sum, sum, Inlines.silk_LSHIFT(-i, 4));
                 /* Q14 */
@@ -225,7 +225,7 @@ class PitchAnalysisCore {
         } else {
             /* Only short-lag bias */
             for (i = MAX_LAG_4KHZ; i >= MIN_LAG_4KHZ; i--) {
-                sum = Inlines.silk_LSHIFT((int) C[i - MIN_LAG_4KHZ], 1);
+                sum = Inlines.silk_LSHIFT(C[i - MIN_LAG_4KHZ], 1);
                 /* Q14 */
                 sum = Inlines.silk_SMLAWB(sum, sum, Inlines.silk_LSHIFT(-i, 4));
                 /* Q14 */
@@ -240,7 +240,7 @@ class PitchAnalysisCore {
         Sort.silk_insertion_sort_decreasing_int16(C, d_srch, CSTRIDE_4KHZ, length_d_srch);
 
         /* Escape if correlation is very low already here */
-        Cmax = (int) C[0];
+        Cmax = C[0];
         /* Q14 */
         if (Cmax < ((int) ((0.2f) * ((long) 1 << (14)) + 0.5))/*Inlines.SILK_CONST(0.2f, 14)*/) {
             Arrays.MemSet(pitch_out, 0, nb_subfr);
@@ -372,7 +372,7 @@ class PitchAnalysisCore {
             } else if (Fs_kHz == 16) {
                 prevLag = Inlines.silk_RSHIFT(prevLag, 1);
             }
-            prevLag_log2_Q7 = Inlines.silk_lin2log((int) prevLag);
+            prevLag_log2_Q7 = Inlines.silk_lin2log(prevLag);
         } else {
             prevLag_log2_Q7 = 0;
         }
@@ -400,7 +400,7 @@ class PitchAnalysisCore {
                     /* Try all codebooks */
                     d_subfr = d + Lag_CB_ptr[i][j];
                     CC[j] = CC[j]
-                            + (int) Inlines.MatrixGet(C, i,
+                            + Inlines.MatrixGet(C, i,
                                     d_subfr - (MIN_LAG_8KHZ - 2),
                                     CSTRIDE_8KHZ);
                 }
@@ -457,7 +457,7 @@ class PitchAnalysisCore {
         }
 
         /* Output normalized correlation */
-        LTPCorr_Q15.Val = (int) Inlines.silk_LSHIFT(Inlines.silk_DIV32_16(CCmax, nb_subfr), 2);
+        LTPCorr_Q15.Val = Inlines.silk_LSHIFT(Inlines.silk_DIV32_16(CCmax, nb_subfr), 2);
         Inlines.OpusAssert(LTPCorr_Q15.Val >= 0);
 
         if (Fs_kHz > 8) {
@@ -516,7 +516,7 @@ class PitchAnalysisCore {
 
             /* Set up codebook parameters according to complexity setting and frame length */
             if (nb_subfr == SilkConstants.PE_MAX_NB_SUBFR) {
-                nb_cbk_search = (int) SilkTables.silk_nb_cbk_searchs_stage3[complexity];
+                nb_cbk_search = SilkTables.silk_nb_cbk_searchs_stage3[complexity];
                 Lag_CB_ptr = SilkTables.silk_CB_lags_stage3;
             } else {
                 nb_cbk_search = SilkConstants.PE_NB_CBKS_STAGE3_10MS;
